@@ -51,12 +51,15 @@ training:
   save_total_limit: 3
   bf16: true
   gradient_checkpointing: true
+  gradient_checkpointing_kwargs:
+    use_reentrant: false
   optim: paged_adamw_8bit
   weight_decay: 0.0
   max_grad_norm: 1.0
   early_stopping_patience: 3
   seed: 1337
   report_to: []
+  ddp_find_unused_parameters: false
 
 eval:
   compute_schema_valid_rate: true

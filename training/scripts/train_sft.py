@@ -13,14 +13,40 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 from pathlib import Path
 
 import yaml
 
 
+def _resolve_data_path(p: str) -> Path:
+    base = Path(p)
+    if base.exists():
+        return base
+    
+    # Kaggle input mount autodetection
+    kaggle_input = Path("/kaggle/input")
+    if kaggle_input.exists():
+        for root, _, files in os.walk(kaggle_input):
+            if base.name in files:
+                return Path(root) / base.name
+                
+    # Fallback to sample synthetic dataset
+    sample = Path("data/processed/samples") / base.name
+    if sample.exists():
+        print(f"Warning: {p} not found, falling back to synthetic {sample}")
+        return sample
+        
+    return base
+
+
 def _load_jsonl(path: str | Path) -> list[dict]:
     out = []
-    with Path(path).open("r", encoding="utf-8") as f:
+    resolved = _resolve_data_path(path)
+    if not resolved.exists():
+        return []
+        
+    with resolved.open("r", encoding="utf-8") as f:
         for line in f:
             line = line.strip()
             if line:
@@ -113,8 +139,13 @@ def main() -> None:
 
     # --- Training ---
     t = cfg["training"]
+    # Add checkpoint saving to /kaggle/working if on kaggle
+    out_dir = t["output_dir"]
+    if Path("/kaggle/working").exists() and not out_dir.startswith("/kaggle/working"):
+        out_dir = str(Path("/kaggle/working") / out_dir)
+        
     targs = TrainingArguments(
-        output_dir=t["output_dir"],
+        output_dir=out_dir,
         per_device_train_batch_size=t["per_device_train_batch_size"],
         per_device_eval_batch_size=t["per_device_eval_batch_size"],
         gradient_accumulation_steps=t["gradient_accumulation_steps"],
@@ -129,6 +160,7 @@ def main() -> None:
         save_total_limit=t["save_total_limit"],
         bf16=t.get("bf16", True),
         gradient_checkpointing=t.get("gradient_checkpointing", True),
+        gradient_checkpointing_kwargs=t.get("gradient_checkpointing_kwargs", None),
         optim=t.get("optim", "paged_adamw_8bit"),
         weight_decay=t.get("weight_decay", 0.0),
         max_grad_norm=t.get("max_grad_norm", 1.0),
@@ -148,9 +180,9 @@ def main() -> None:
     )
 
     trainer.train(resume_from_checkpoint=args.resume)
-    trainer.save_model(t["output_dir"])
-    tokenizer.save_pretrained(t["output_dir"])
-    print(f"[train_sft] saved to {t['output_dir']}")
+    trainer.save_model(out_dir)
+    tokenizer.save_pretrained(out_dir)
+    print(f"[train_sft] saved to {out_dir}")
 
 
 if __name__ == "__main__":

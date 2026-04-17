@@ -1,0 +1,13 @@
+{
+  "id": "jkhospital/criticalcare-copilot-train",
+  "title": "CriticalCare Copilot Train",
+  "code_file": "kaggle_03_train_gemma4_e4b.ipynb",
+  "language": "python",
+  "kernel_type": "notebook",
+  "is_private": "true",
+  "enable_gpu": "true",
+  "enable_internet": "true",
+  "dataset_sources": [],
+  "competition_sources": [],
+  "kernel_sources": []
+}
