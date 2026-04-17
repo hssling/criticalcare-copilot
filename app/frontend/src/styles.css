@@ -2,10 +2,75 @@
 @tailwind components;
 @tailwind utilities;
 
-.badge {
-  @apply inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold;
+@layer base {
+  :root {
+    --brand-primary: #0ea5e9;
+    --brand-secondary: #06b6d4;
+    --brand-accent: #8b5cf6;
+    --glass-bg: rgba(255, 255, 255, 0.7);
+    --glass-border: rgba(255, 255, 255, 0.3);
+  }
+
+  body {
+    @apply bg-[#f8fafc] text-slate-900 overflow-x-hidden;
+    font-family: 'Inter', system-ui, sans-serif;
+  }
+
+  h1, h2, h3, h4 {
+    font-family: 'Outfit', sans-serif;
+    @apply font-semibold tracking-tight;
+  }
 }
-.badge-crit { @apply bg-red-100 text-red-800; }
-.badge-high { @apply bg-orange-100 text-orange-800; }
-.badge-med  { @apply bg-amber-100 text-amber-800; }
-.badge-low  { @apply bg-slate-100 text-slate-800; }
+
+@layer components {
+  .glass-card {
+    @apply bg-white/70 backdrop-blur-md border border-white/30 shadow-xl shadow-slate-200/50 rounded-2xl;
+  }
+
+  .nav-item {
+    @apply flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-300 text-slate-600 hover:bg-white hover:text-sky-600 hover:shadow-sm;
+  }
+
+  .nav-item.active {
+    @apply bg-white text-sky-600 shadow-md shadow-sky-100/50 ring-1 ring-sky-100;
+  }
+
+  .badge {
+    @apply px-2 py-0.5 rounded-full text-[10px] uppercase font-bold tracking-wider border;
+  }
+
+  .badge-low { @apply bg-emerald-50 text-emerald-600 border-emerald-100; }
+  .badge-med { @apply bg-amber-50 text-amber-600 border-amber-100; }
+  .badge-high { @apply bg-rose-50 text-rose-600 border-rose-100; }
+
+  .btn-primary {
+    @apply bg-slate-900 text-white px-6 py-2.5 rounded-xl font-medium transition-all hover:bg-slate-800 hover:scale-[1.02] active:scale-[0.98] shadow-lg shadow-slate-200;
+  }
+
+  .clinical-input {
+    @apply w-full bg-white border border-slate-200 rounded-xl px-4 py-3 focus:ring-2 focus:ring-sky-500/20 focus:border-sky-500 transition-all outline-none;
+  }
+}
+
+/* Shimmer animation for loading states */
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.animate-shimmer {
+  background: linear-gradient(90deg, #f1f5f9 25%, #f8fafc 50%, #f1f5f9 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite linear;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  @apply bg-transparent;
+}
+::-webkit-scrollbar-thumb {
+  @apply bg-slate-200 rounded-full hover:bg-slate-300;
+}
