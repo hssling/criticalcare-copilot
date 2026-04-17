@@ -5,7 +5,8 @@ import {
   Sparkles, 
   ShieldCheck, 
   HelpCircle,
-  ArrowRight
+  ArrowRight,
+  ExternalLink
 } from "lucide-react";
 import { useLocalCase } from "../hooks/useLocalCase";
 

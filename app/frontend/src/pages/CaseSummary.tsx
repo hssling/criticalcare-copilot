@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { motion } from "framer-motion";
 import { 
   ShieldAlert, 
   Info, 
@@ -8,14 +7,16 @@ import {
   FileText,
   Clock,
   ExternalLink,
-  Search
+  Search,
+  ClipboardList,
+  Activity,
+  Database
 } from "lucide-react";
 import { useLocalCase } from "../hooks/useLocalCase";
 import { infer, auditBeacon } from "../lib/api";
 import type { CopilotResponse } from "../types";
 import AlertList from "../components/AlertList";
 import EvidenceList from "../components/EvidenceList";
-import RationaleDrawer from "../components/RationaleDrawer";
 import Timeline from "../components/Timeline";
 
 export default function CaseSummary() {
