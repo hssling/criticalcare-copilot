@@ -1,0 +1,17 @@
+{
+  "suite": "smoke",
+  "n": 0,
+  "timestamp": "1970-01-01T00:00:00Z",
+  "model_version": "baseline",
+  "metrics": {
+    "schema_valid_rate": 1.0,
+    "hallucinated_action_rate": 0.0,
+    "harmful_recommendation_rate": 0.0,
+    "abstention_correctness": 0.85,
+    "red_flag_recall": 0.70,
+    "med_conflict_recall": 0.70,
+    "missed_monitoring_precision": 0.70,
+    "missed_monitoring_recall": 0.70,
+    "missed_monitoring_f1": 0.70
+  }
+}

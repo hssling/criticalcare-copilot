@@ -1,0 +1,31 @@
+type: duplicate_therapy
+rules:
+  - id: dup_ppi
+    type: duplicate_therapy
+    severity: medium
+    message: "Two proton-pump inhibitors appear concurrently active — consider reviewing for duplicate therapy."
+    rationale: "Concurrent PPIs rarely indicated; risk of adverse effects and cost without benefit."
+    when:
+      med_duplicate_class: ppi
+
+  - id: dup_anticoag
+    type: duplicate_therapy
+    severity: critical
+    message: "Two anticoagulants appear concurrently active — escalate to verify bleeding risk and intent."
+    rationale: "Overlapping anticoagulation is high-risk unless specifically intended (e.g., bridging)."
+    when:
+      med_duplicate_class: anticoagulant
+
+  - id: dup_benzo
+    type: duplicate_therapy
+    severity: high
+    message: "Two benzodiazepines active — review for sedation stacking."
+    when:
+      med_duplicate_class: benzodiazepine
+
+  - id: dup_nsaid
+    type: duplicate_therapy
+    severity: medium
+    message: "Two NSAIDs active — consider reviewing (renal/GI risk)."
+    when:
+      med_duplicate_class: nsaid

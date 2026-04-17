@@ -1,0 +1,29 @@
+type: electrolyte_threshold
+rules:
+  - id: elyte_hyperkalemia
+    type: electrolyte_threshold
+    severity: critical
+    message: "Serum potassium ≥ 6.0 mEq/L — escalate urgently; obtain ECG and review."
+    when:
+      lab_above: { name: "potassium", value: 6.0 }
+
+  - id: elyte_hypokalemia
+    type: electrolyte_threshold
+    severity: high
+    message: "Serum potassium ≤ 3.0 mEq/L — review repletion and telemetry."
+    when:
+      lab_below: { name: "potassium", value: 3.0 }
+
+  - id: elyte_hyponatremia_severe
+    type: electrolyte_threshold
+    severity: high
+    message: "Serum sodium ≤ 125 mEq/L — review symptoms, rate of correction, and underlying cause."
+    when:
+      lab_below: { name: "sodium", value: 125 }
+
+  - id: elyte_hypocalcemia_ionized
+    type: electrolyte_threshold
+    severity: medium
+    message: "Ionized calcium ≤ 1.0 mmol/L — consider reviewing repletion."
+    when:
+      lab_below: { name: "ionized_calcium", value: 1.0 }

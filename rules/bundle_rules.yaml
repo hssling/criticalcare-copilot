@@ -1,0 +1,17 @@
+type: bundle_omission
+rules:
+  - id: abcdef_sedation_assessment
+    type: bundle_omission
+    severity: medium
+    message: "ABCDEF bundle: no recent RASS/sedation assessment documented — consider reviewing."
+    when:
+      on_med_any_of: ["propofol", "midazolam", "dexmedetomidine", "fentanyl"]
+      lab_missing_for_hours: { name: "rass", hours: 8 }
+
+  - id: sepsis_lactate_followup
+    type: bundle_omission
+    severity: high
+    message: "Sepsis bundle: elevated lactate previously and no recent repeat lactate — consider repeat."
+    when:
+      diagnosis_any_of: ["sepsis", "septic shock"]
+      lab_missing_for_hours: { name: "lactate", hours: 6 }

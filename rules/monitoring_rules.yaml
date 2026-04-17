@@ -1,0 +1,25 @@
+type: missed_monitoring
+rules:
+  - id: mon_vanc_no_trough
+    type: missed_monitoring
+    severity: high
+    message: "Vancomycin active but no trough level in last 48h — consider obtaining."
+    when:
+      on_med_any_of: ["vancomycin"]
+      lab_missing_for_hours: { name: "vancomycin_trough", hours: 48 }
+
+  - id: mon_heparin_no_aptt
+    type: missed_monitoring
+    severity: high
+    message: "IV heparin active but no aPTT in last 6h — consider obtaining."
+    when:
+      on_med_any_of: ["heparin"]
+      lab_missing_for_hours: { name: "aptt", hours: 6 }
+
+  - id: mon_insulin_no_glucose
+    type: missed_monitoring
+    severity: medium
+    message: "Insulin infusion active but no glucose check in last 1h — consider obtaining."
+    when:
+      on_med_any_of: ["insulin"]
+      lab_missing_for_hours: { name: "glucose", hours: 1 }

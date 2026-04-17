@@ -1,0 +1,26 @@
+type: allergy_conflict
+rules:
+  - id: allergy_penicillin_vs_betalactam
+    type: allergy_conflict
+    severity: critical
+    message: "Penicillin allergy documented while a beta-lactam is active — escalate and review cross-reactivity."
+    rationale: "Beta-lactam exposure in penicillin-allergic patients requires deliberate risk assessment."
+    when:
+      allergy_any_of: ["penicillin", "amoxicillin"]
+      med_name_any_of: ["amoxicillin", "ampicillin", "piperacillin-tazobactam", "cefepime", "ceftriaxone", "meropenem"]
+
+  - id: allergy_sulfa_vs_sulfa_abx
+    type: allergy_conflict
+    severity: high
+    message: "Sulfa allergy documented while TMP-SMX active — review before continuing."
+    when:
+      allergy_any_of: ["sulfa", "sulfonamide"]
+      med_name_any_of: ["trimethoprim-sulfamethoxazole", "tmp-smx", "bactrim"]
+
+  - id: allergy_nsaid_vs_nsaid
+    type: allergy_conflict
+    severity: high
+    message: "NSAID allergy documented while an NSAID is active — review."
+    when:
+      allergy_any_of: ["nsaid", "ibuprofen", "naproxen", "aspirin"]
+      med_class_any_of: ["nsaid"]

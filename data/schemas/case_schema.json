@@ -1,0 +1,152 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "ClinicalCase",
+  "type": "object",
+  "required": ["case_id", "demographics", "encounter", "icu_stay", "provenance"],
+  "additionalProperties": false,
+  "properties": {
+    "case_id":     { "type": "string", "minLength": 1 },
+    "demographics": {
+      "type": "object",
+      "required": ["age_years", "sex"],
+      "properties": {
+        "age_years": { "type": "number", "minimum": 0, "maximum": 130 },
+        "sex":       { "type": "string", "enum": ["M", "F", "X", "unknown"] },
+        "weight_kg": { "type": ["number", "null"], "minimum": 0 },
+        "height_cm": { "type": ["number", "null"], "minimum": 0 }
+      }
+    },
+    "encounter": {
+      "type": "object",
+      "required": ["encounter_id", "admission_ts"],
+      "properties": {
+        "encounter_id": { "type": "string" },
+        "admission_ts": { "type": "string", "format": "date-time" },
+        "discharge_ts": { "type": ["string", "null"], "format": "date-time" },
+        "admit_source": { "type": ["string", "null"] }
+      }
+    },
+    "icu_stay": {
+      "type": "object",
+      "required": ["stay_id", "icu_admit_ts"],
+      "properties": {
+        "stay_id":      { "type": "string" },
+        "icu_admit_ts": { "type": "string", "format": "date-time" },
+        "icu_discharge_ts": { "type": ["string", "null"], "format": "date-time" },
+        "unit_type":    { "type": ["string", "null"] },
+        "apache_ii":    { "type": ["number", "null"] },
+        "sofa":         { "type": ["number", "null"] }
+      }
+    },
+    "vitals": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["ts", "name", "value"],
+        "properties": {
+          "ts":    { "type": "string", "format": "date-time" },
+          "name":  { "type": "string" },
+          "value": { "type": ["number", "string"] },
+          "unit":  { "type": ["string", "null"] }
+        }
+      }
+    },
+    "labs": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["ts", "name", "value"],
+        "properties": {
+          "ts":    { "type": "string", "format": "date-time" },
+          "name":  { "type": "string" },
+          "value": { "type": ["number", "string"] },
+          "unit":  { "type": ["string", "null"] },
+          "abnormal_flag": { "type": ["string", "null"] }
+        }
+      }
+    },
+    "medications": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["name", "start_ts"],
+        "properties": {
+          "name":     { "type": "string" },
+          "rxnorm":   { "type": ["string", "null"] },
+          "dose":     { "type": ["number", "null"] },
+          "dose_unit":{ "type": ["string", "null"] },
+          "route":    { "type": ["string", "null"] },
+          "frequency":{ "type": ["string", "null"] },
+          "start_ts": { "type": "string", "format": "date-time" },
+          "end_ts":   { "type": ["string", "null"], "format": "date-time" },
+          "status":   { "type": ["string", "null"], "enum": [null, "active", "held", "stopped", "completed"] },
+          "indication":{ "type": ["string", "null"] }
+        }
+      }
+    },
+    "procedures":  { "type": "array", "items": { "type": "object" } },
+    "devices":     { "type": "array", "items": { "type": "object" } },
+    "allergies": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["substance"],
+        "properties": {
+          "substance": { "type": "string" },
+          "reaction":  { "type": ["string", "null"] },
+          "severity":  { "type": ["string", "null"], "enum": [null, "mild", "moderate", "severe", "anaphylaxis"] }
+        }
+      }
+    },
+    "diagnoses": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["label"],
+        "properties": {
+          "label":  { "type": "string" },
+          "icd10":  { "type": ["string", "null"] },
+          "status": { "type": ["string", "null"], "enum": [null, "active", "resolved", "suspected"] }
+        }
+      }
+    },
+    "notes": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["ts", "kind", "text"],
+        "properties": {
+          "ts":   { "type": "string", "format": "date-time" },
+          "kind": { "type": "string" },
+          "text": { "type": "string" },
+          "author_role": { "type": ["string", "null"] }
+        }
+      }
+    },
+    "imaging_summaries": { "type": "array", "items": { "type": "object" } },
+    "timeline_events":   { "type": "array", "items": { "type": "object" } },
+    "safety_labels": {
+      "type": "object",
+      "description": "Optional ground-truth labels for training/eval.",
+      "properties": {
+        "duplicate_therapy":    { "type": "array", "items": { "type": "string" } },
+        "allergy_conflicts":    { "type": "array", "items": { "type": "string" } },
+        "renal_dose_concerns":  { "type": "array", "items": { "type": "string" } },
+        "missed_monitoring":    { "type": "array", "items": { "type": "string" } },
+        "bundle_omissions":     { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "provenance": {
+      "type": "object",
+      "required": ["source", "extracted_ts"],
+      "properties": {
+        "source":       { "type": "string" },
+        "source_version": { "type": ["string", "null"] },
+        "extracted_ts": { "type": "string", "format": "date-time" },
+        "deidentified": { "type": "boolean", "default": true }
+      }
+    },
+    "review_required":     { "type": "boolean", "default": true },
+    "abstention_expected": { "type": ["boolean", "null"], "default": null }
+  }
+}

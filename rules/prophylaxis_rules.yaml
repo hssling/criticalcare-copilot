@@ -1,0 +1,16 @@
+type: vte_prophylaxis_omission
+rules:
+  - id: prophy_vte_missing
+    type: vte_prophylaxis_omission
+    severity: high
+    message: "No documented VTE prophylaxis (pharmacologic or mechanical) — review indication."
+    rationale: "ICU patients are at high VTE risk unless contraindicated."
+    when:
+      not_on_med_any_of: ["heparin", "enoxaparin", "dalteparin", "fondaparinux"]
+
+  - id: prophy_sup_missing
+    type: stress_ulcer_prophylaxis_omission
+    severity: medium
+    message: "No documented stress-ulcer prophylaxis — review against unit protocol."
+    when:
+      not_on_med_any_of: ["pantoprazole", "omeprazole", "famotidine"]

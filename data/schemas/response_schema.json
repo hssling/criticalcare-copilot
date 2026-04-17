@@ -1,0 +1,37 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "CopilotResponse",
+  "type": "object",
+  "required": [
+    "summary", "active_problems", "alerts", "recommendations",
+    "missing_data", "uncertainty", "escalation", "review_required", "evidence"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "summary":          { "type": "string" },
+    "active_problems":  { "type": "array", "items": { "type": "string" } },
+    "alerts": {
+      "type": "array",
+      "items": { "$ref": "alert_schema.json" }
+    },
+    "recommendations":  { "type": "array", "items": { "type": "string" } },
+    "missing_data":     { "type": "array", "items": { "type": "string" } },
+    "uncertainty":      { "type": "string", "enum": ["low", "medium", "high"] },
+    "escalation":       { "type": "string" },
+    "review_required":  { "type": "boolean", "const": true },
+    "evidence": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["title", "snippet", "source_id"],
+        "properties": {
+          "title":     { "type": "string" },
+          "snippet":   { "type": "string" },
+          "source_id": { "type": "string" }
+        }
+      }
+    },
+    "model_version":    { "type": ["string", "null"] },
+    "abstained":        { "type": "boolean", "default": false }
+  }
+}

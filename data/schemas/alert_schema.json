@@ -1,0 +1,38 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Alert",
+  "type": "object",
+  "required": ["type", "severity", "source", "message"],
+  "additionalProperties": false,
+  "properties": {
+    "type": {
+      "type": "string",
+      "enum": [
+        "duplicate_therapy",
+        "allergy_conflict",
+        "renal_dose_risk",
+        "hepatic_dose_risk",
+        "contraindication",
+        "electrolyte_threshold",
+        "missed_monitoring",
+        "vte_prophylaxis_omission",
+        "stress_ulcer_prophylaxis_omission",
+        "bundle_omission",
+        "abnormal_trend",
+        "ade_suspicion",
+        "handoff_inconsistency",
+        "other"
+      ]
+    },
+    "severity":  { "type": "string", "enum": ["low", "medium", "high", "critical"] },
+    "source":    { "type": "string", "enum": ["rule", "model", "retrieval"] },
+    "message":   { "type": "string", "minLength": 1 },
+    "rationale": { "type": ["string", "null"] },
+    "rule_id":   { "type": ["string", "null"] },
+    "evidence_ids": {
+      "type": "array",
+      "items": { "type": "string" },
+      "default": []
+    }
+  }
+}

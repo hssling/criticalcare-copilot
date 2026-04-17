@@ -1,0 +1,17 @@
+type: hepatic_dose_risk
+rules:
+  - id: hepatic_apap_high
+    type: hepatic_dose_risk
+    severity: high
+    message: "Acetaminophen active with elevated AST/ALT — review cumulative dose and indication."
+    when:
+      on_med_any_of: ["acetaminophen", "paracetamol"]
+      lab_above: { name: "alt", value: 200 }
+
+  - id: hepatic_statin_high_ast
+    type: hepatic_dose_risk
+    severity: medium
+    message: "Statin active with markedly elevated AST — review."
+    when:
+      med_class_any_of: ["statin"]
+      lab_above: { name: "ast", value: 200 }

@@ -1,0 +1,30 @@
+name: eval
+
+on:
+  pull_request:
+  schedule:
+    - cron: "0 6 * * *"   # nightly
+  workflow_dispatch:
+
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.11" }
+      - run: |
+          pip install -U pip
+          pip install pydantic pyyaml jsonschema httpx fastapi uvicorn pytest numpy scikit-learn
+      - run: python scripts/generate_sample_cases.py --out data/processed/samples --n 5
+      - name: Run smoke eval (mock model)
+        run: |
+          python -m eval.benchmark_runner --suite smoke --mock \
+            --out eval/reports/latest.json \
+            --baseline eval/baseline_metrics.json
+      - name: Upload report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: eval-report
+          path: eval/reports/

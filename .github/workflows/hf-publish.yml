@@ -1,0 +1,35 @@
+name: hf-publish
+
+# Disabled by default — requires a merged model artifact staged in a CI
+# artifact store or a runner with adequate disk/bandwidth. Enable by
+# triggering manually once the artifact is available.
+#
+# Required secrets:
+#   HF_HUB_TOKEN   - fine-grained token with write access to the model repo
+#   HF_ORG         - HF org/user
+#   HF_MODEL_REPO  - repo name
+
+on:
+  workflow_dispatch:
+    inputs:
+      path:
+        description: "Path under ./checkpoints to publish (e.g. merged)"
+        required: true
+        default: "merged"
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.11" }
+      - run: pip install huggingface_hub pyyaml
+      - name: Publish
+        env:
+          HF_HUB_TOKEN: ${{ secrets.HF_HUB_TOKEN }}
+          HF_ORG: ${{ secrets.HF_ORG }}
+          HF_MODEL_REPO: ${{ secrets.HF_MODEL_REPO }}
+        run: |
+          test -d "checkpoints/${{ inputs.path }}" || { echo "artifact not found"; exit 1; }
+          python hf/publish_model.py --path "checkpoints/${{ inputs.path }}" --repo "$HF_ORG/$HF_MODEL_REPO"

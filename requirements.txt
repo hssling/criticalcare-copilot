@@ -1,0 +1,38 @@
+# Core
+pydantic>=2.6
+pyyaml>=6.0
+jsonschema>=4.21
+python-dotenv>=1.0
+typer>=0.12
+
+# API
+fastapi>=0.110
+uvicorn[standard]>=0.29
+httpx>=0.27
+
+# ML / training (optional at runtime; required for training scripts)
+torch>=2.3
+transformers>=4.44
+accelerate>=0.33
+peft>=0.12
+bitsandbytes>=0.43; platform_system != "Windows"
+datasets>=2.20
+trl>=0.9
+sentencepiece>=0.2
+
+# Eval / metrics
+scikit-learn>=1.4
+numpy>=1.26
+pandas>=2.2
+rouge-score>=0.1.2
+
+# RAG
+faiss-cpu>=1.8
+sentence-transformers>=3.0
+
+# HF
+huggingface_hub>=0.24
+
+# Dev
+pytest>=8.1
+ruff>=0.5

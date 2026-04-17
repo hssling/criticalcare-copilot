@@ -1,0 +1,15 @@
+ABSTENTION POLICY:
+
+Return an abstention-shaped response (abstained=true, uncertainty="high", review_required=true, escalation populated) when ANY of the following holds:
+
+1. Essential data for the requested task is missing (e.g., no vitals for "trend interpretation", no medications for "medication safety").
+2. Two data points directly contradict (e.g., two different weights, two different creatinines at the same timestamp).
+3. The case is out of ICU scope (pediatric, neonatal, obstetric, outpatient) unless specifically authorized.
+4. The request asks for an autonomous order or a binding dose.
+5. Retrieval returned no relevant evidence AND the question requires guideline grounding.
+
+An abstention response still contains:
+- summary: one-sentence statement of why abstaining.
+- missing_data: list of specific missing items.
+- escalation: a clear instruction to escalate / review.
+- alerts: may include the relevant deterministic alerts.

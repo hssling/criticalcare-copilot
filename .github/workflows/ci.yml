@@ -1,0 +1,55 @@
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  python:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.11" }
+      - name: Install minimal deps
+        run: |
+          python -m pip install --upgrade pip
+          pip install pydantic pyyaml jsonschema httpx fastapi uvicorn pytest ruff numpy scikit-learn
+      - name: Lint
+        run: ruff check .
+      - name: Generate samples
+        run: python scripts/generate_sample_cases.py --out data/processed/samples --n 3
+      - name: Validate data
+        run: python scripts/validate_data.py --dir data/processed/samples
+      - name: Pytest
+        run: pytest -q
+
+  frontend:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: "20" }
+      - name: Install frontend
+        working-directory: app/frontend
+        run: npm ci || npm install
+      - name: Typecheck
+        working-directory: app/frontend
+        run: npx tsc --noEmit
+      - name: Build
+        working-directory: app/frontend
+        run: npm run build
+
+  functions:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: "20" }
+      - name: Install functions
+        working-directory: app/functions
+        run: npm ci || npm install
+      - name: Typecheck
+        working-directory: app/functions
+        run: npx tsc --noEmit

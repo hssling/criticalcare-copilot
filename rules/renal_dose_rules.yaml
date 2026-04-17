@@ -1,0 +1,34 @@
+type: renal_dose_risk
+rules:
+  - id: renal_low_egfr_vanc
+    type: renal_dose_risk
+    severity: high
+    message: "Vancomycin active with estimated low eGFR — review dosing and obtain trough level."
+    rationale: "Renal impairment increases vancomycin AUC; dosing and monitoring adjustments are often required."
+    when:
+      on_med_any_of: ["vancomycin"]
+      egfr_below: 50
+
+  - id: renal_low_egfr_gent
+    type: renal_dose_risk
+    severity: high
+    message: "Aminoglycoside active with estimated low eGFR — review dosing interval and levels."
+    when:
+      on_med_any_of: ["gentamicin", "tobramycin", "amikacin"]
+      egfr_below: 50
+
+  - id: renal_low_egfr_enoxaparin
+    type: renal_dose_risk
+    severity: high
+    message: "Enoxaparin active with estimated low eGFR — review for renal dose adjustment or switch."
+    when:
+      on_med_any_of: ["enoxaparin"]
+      egfr_below: 30
+
+  - id: renal_low_egfr_nsaid
+    type: renal_dose_risk
+    severity: medium
+    message: "NSAID active with low eGFR — review need."
+    when:
+      med_class_any_of: ["nsaid"]
+      egfr_below: 60

@@ -1,0 +1,41 @@
+name: netlify-deploy
+
+# Netlify auto-deploys from GitHub when the repo is linked; this workflow is
+# a manual trigger that builds locally and calls Netlify's CLI. Configure:
+#   - secrets.NETLIFY_AUTH_TOKEN
+#   - secrets.NETLIFY_SITE_ID
+# Leave disabled (workflow_dispatch) unless you want CI-driven deploys.
+
+on:
+  workflow_dispatch:
+    inputs:
+      prod:
+        description: "Deploy to production?"
+        required: true
+        default: "false"
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: "20" }
+      - name: Install
+        run: |
+          (cd app/frontend && npm ci || npm install)
+          (cd app/functions && npm ci || npm install)
+          npm i -g netlify-cli
+      - name: Build frontend
+        working-directory: app/frontend
+        run: npm run build
+      - name: Deploy
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          NETLIFY_SITE_ID:   ${{ secrets.NETLIFY_SITE_ID }}
+        run: |
+          if [ "${{ inputs.prod }}" = "true" ]; then
+            netlify deploy --prod --dir app/frontend/dist --functions app/functions
+          else
+            netlify deploy --dir app/frontend/dist --functions app/functions
+          fi

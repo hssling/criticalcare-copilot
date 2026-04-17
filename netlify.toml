@@ -1,0 +1,33 @@
+# Netlify build configuration.
+# IMPORTANT: Do NOT place runtime secrets here.
+# Secrets (HF_API_TOKEN, etc.) live in Netlify UI → Site → Environment variables.
+
+[build]
+  base    = "app/frontend"
+  publish = "dist"
+  command = "npm ci && npm run build"
+
+[functions]
+  directory         = "../functions"
+  node_bundler      = "esbuild"
+  included_files    = []
+
+[dev]
+  framework = "vite"
+  targetPort = 5173
+
+# SPA fallback
+[[redirects]]
+  from = "/*"
+  to   = "/index.html"
+  status = 200
+
+# Security headers
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options            = "DENY"
+    X-Content-Type-Options     = "nosniff"
+    Referrer-Policy            = "strict-origin-when-cross-origin"
+    Permissions-Policy         = "geolocation=(), microphone=(), camera=()"
+    Strict-Transport-Security  = "max-age=31536000; includeSubDomains"

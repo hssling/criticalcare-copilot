@@ -1,0 +1,14 @@
+# Comparator baseline — MedGemma family. Used only for evaluation, not fine-tuning.
+model:
+  base: google/medgemma-1.5-4b-it
+  dtype: bfloat16
+  quantization:
+    enabled: false
+
+eval_only: true
+
+data:
+  test_path:  data/processed/test.jsonl
+  prompt_template: training/prompts/system_prompt.txt
+  safety_prompt:   training/prompts/safety_prompt.txt
+  max_seq_len: 4096
