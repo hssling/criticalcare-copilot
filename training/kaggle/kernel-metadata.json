@@ -1,0 +1,13 @@
+{
+  "id": "jkhospital/criticalcare-copilot-master",
+  "title": "CriticalCare Copilot: Master Pipeline",
+  "code_file": "criticalcare_copilot_master.ipynb",
+  "language": "python",
+  "kernel_type": "notebook",
+  "is_private": "true",
+  "enable_gpu": "true",
+  "enable_internet": "true",
+  "dataset_sources": [],
+  "competition_sources": [],
+  "kernel_sources": []
+}
