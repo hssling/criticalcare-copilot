@@ -3,14 +3,14 @@
 # Secrets (HF_API_TOKEN, etc.) live in Netlify UI → Site → Environment variables.
 
 [build]
-  base    = "app/frontend"
-  publish = "dist"
-  command = "npm ci && npm run build"
+  base    = ""
+  publish = "app/frontend/dist"
+  command = "npm install && npm run build --workspace=app/frontend"
 
 [functions]
-  directory         = "../functions"
+  directory         = "app/functions"
   node_bundler      = "esbuild"
-  included_files    = []
+  included_files    = ["data/schemas/*.json"]
 
 [dev]
   framework = "vite"

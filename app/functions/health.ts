@@ -1,27 +1,38 @@
-/** GET /.netlify/functions/health — basic liveness + endpoint reachability. */
+/**
+ * GET /.netlify/functions/health
+ * Checks if the configured HF Endpoint is reachable.
+ */
 import type { Handler } from "@netlify/functions";
 
 export const handler: Handler = async () => {
   const url = process.env.HF_ENDPOINT_URL;
-  let reachable = false;
-  if (url) {
+  const token = process.env.HF_API_TOKEN;
+
+  let modelStatus = "not_configured";
+  if (url && token) {
     try {
-      const ctl = new AbortController();
-      const to = setTimeout(() => ctl.abort(), 3_000);
-      const r = await fetch(url, { method: "GET", signal: ctl.signal });
+      const controller = new AbortController();
+      const to = setTimeout(() => controller.abort(), 2000);
+      const r = await fetch(url, {
+        method: "HEAD",
+        headers: { Authorization: `Bearer ${token}` },
+        signal: controller.signal,
+      });
       clearTimeout(to);
-      reachable = r.status < 500;
-    } catch { reachable = false; }
+      modelStatus = r.ok ? "reachable" : `failed_${r.status}`;
+    } catch (e: any) {
+      modelStatus = e.name === "AbortError" ? "timeout" : "unreachable";
+    }
   }
+
   return {
     statusCode: 200,
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
-      ok: true,
-      model_endpoint: reachable ? "reachable" : "unreachable",
-      has_token: Boolean(process.env.HF_API_TOKEN),
-      model_revision: process.env.HF_MODEL_REVISION ?? "dev",
-      enable_model_call: process.env.ENABLE_MODEL_CALL !== "false",
+      ok: modelStatus === "reachable",
+      ts: new Date().toISOString(),
+      model_endpoint: modelStatus,
+      version: process.env.HF_MODEL_REVISION ?? "dev",
     }),
   };
 };
