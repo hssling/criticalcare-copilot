@@ -8,7 +8,13 @@ export async function infer(task: string, clinCase: ClinicalCase): Promise<Copil
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ task, case: clinCase }),
   });
-  if (!r.ok) throw new Error(`infer failed: ${r.status}`);
+  if (!r.ok) {
+    const data = await r.json().catch(() => ({}));
+    const err = new Error(data.error?.message || `infer failed: ${r.status}`);
+    (err as any).code = data.error?.code;
+    (err as any).reference_id = data.error?.reference_id;
+    throw err;
+  }
   return r.json();
 }
 

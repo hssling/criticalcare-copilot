@@ -40,3 +40,18 @@ export interface ClinicalCase {
   provenance: { source: string; extracted_ts: string };
   review_required?: boolean;
 }
+
+export interface AuditEvent {
+  ts?: string;
+  reqId?: string;
+  event: string;
+  case_id: string;
+  task?: string;
+  model_version?: string;
+  rules_fired?: string[];
+  review_required?: boolean;
+  schema_valid?: boolean;
+  degraded?: boolean;
+  user_id?: string;
+  metadata?: Record<string, any>;
+}

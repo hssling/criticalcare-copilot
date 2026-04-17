@@ -24,7 +24,17 @@ export default function CaseSummary() {
 
   if (!clinCase) return <p>No active case. Start under "New case" or "Samples".</p>;
   if (loading) return <p className="text-sm text-slate-500">Running review-required analysis…</p>;
-  if (err) return <p className="text-sm text-red-600">{err}</p>;
+  if (err) {
+    const isStructured = (err as any).reference_id;
+    return (
+      <div className="bg-red-50 border border-red-200 rounded p-4 text-sm text-red-700">
+        <p className="font-semibold">{String(err)}</p>
+        {isStructured && (
+          <p className="mt-1 opacity-80">Reference ID: {(err as any).reference_id}</p>
+        )}
+      </div>
+    );
+  }
   if (!resp) return null;
 
   return (
